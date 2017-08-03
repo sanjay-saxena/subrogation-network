@@ -42,7 +42,7 @@ For example, when the `Bootstrap` transaction is submitted, Hyperledger Composer
 
 ```
 /**
- * Bootstrap items for convenience.
+ * Bootstrap the world state for convenience.
  * @param {org.example.subrogation.Bootstrap} txn -- Bootstrap transaction
  * @transaction
  */
@@ -50,6 +50,26 @@ function onBootstrap(txn) {
     ....
 
     var factory = getFactory();
+
+    // Admin
+    var bossman = factory.newResource(ROOT_NAMESPACE,
+                                      'Admin',
+                                      'bobby.da.boss@example.com');
+    bossman.firstName = "Bobby";
+    bossman.lastName = "Da Boss";
+    bossman.password = "u talkin' to me?";
+    admins.push(bossman);
+
+    // Insurance Agents
+    var mr_incredible = factory.newResource(ROOT_NAMESPACE,
+                                            'Agent',
+                                            'mr.incredible@example.com');
+    mr_incredible.firstName = "Bob";
+    mr_incredible.lastName = "Parr";
+    mr_incredible.password = "family-man-of-steel";
+    mr_incredible.title = "Principal Insurance Agent";
+    mr_incredible.company = 'ACME_CORP';
+    agents.push(mr_incredible);
 
     ....
 
