@@ -1,0 +1,29 @@
+{
+  "name": "subrogation-network",
+  "version": "1.0.0",
+  "description": "Insurance Subrogation Network for Hyperledger Fabric V1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanjay-saxena/subrogation-network.git"
+  },
+  "keywords": [
+    "todo",
+    "list"
+  ],
+  "author": "IBM",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "winston": "^2.3.0"
+  },
+  "devDependencies": {
+     "homedir": "^0.6.0"
+  },
+  "bugs": {
+    "url": "https://github.com/sanjay-saxena/subrogation-network/issues"
+  },
+  "homepage": "https://github.com/sanjay-saxena/subrogation-network#readme"
+}

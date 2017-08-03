@@ -1,0 +1,209 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+namespace org.example.subrogation
+
+enum Company {
+    o ACME_CORP
+    o GEIKO_CORP
+    o AFLACK_CORP
+    o NATIONWIDE_CORP
+    o WAYNE_ENTERPRISES
+}
+
+enum ClaimStatus {
+    o INIT
+    o UNDER_REVIEW
+    o UNDER_COUNTER_PARTY_REVIEW
+    o ACCEPTED
+    o ADJUST
+    o ADJUSTED
+    o REJECTED
+}
+
+enum RecoveryType {
+    o REPAIR
+    o SALVAGE
+}
+
+enum PolicyType {
+    o AUTO
+    o DENTAL
+    o HOME
+    o LIFE
+    o MEDICAL
+    o VISION
+}
+
+asset Policy identified by policyId {
+    o String policyId
+    o PolicyType policyType
+    o Company company
+    --> PolicyHolder policyHolder
+}
+
+asset Claim identified by claimId {
+    o String claimId
+    o ClaimStatus status
+    o Double totalCost optional
+    o Double coverage optional
+    o Double adjustedTotalCost optional
+    o Double adjustedCoverage optional
+    o Double assessedTotalCost optional
+    o Double assessedCoverage optional
+    o String description optional
+    o RecoveryType recoveryType optional
+    o DateTime paymentDate optional
+    o DateTime createdAt
+    o DateTime lastUpdatedAt optional
+    --> Policy policy
+    --> Agent primaryAgent optional
+    --> Agent counterPartyAgent optional
+    --> Adjustor adjustor optional
+    --> User createdBy
+    --> User lastUpdatedBy optional
+}
+
+abstract participant User identified by email {
+  o String email
+  o String firstName
+  o String lastName
+  o String password
+}
+
+/*
+** An instance of Admin will have to ability to make sure that
+** the entire Business Network is operational.
+*/
+participant Admin extends User {
+}
+
+participant PolicyHolder extends User {
+    --> Policy[] policies
+}
+
+participant Agent extends User {
+    o String title
+    o Company company
+}
+
+participant Adjustor extends User {
+    o String title
+}
+
+// ### TODO:
+// ### Transactions to create, update, and delete -- Agents, PolicyHolders,
+// ### Policies, PolicyHolders, Adjustors -- can be added later. Similarly,
+// ### transactions to create and delete Claims can be added later.
+
+abstract transaction SubrogationTransaction {
+}
+
+/**
+ * This transaction is used to populate the World State with some data for
+ * convenience.
+ */
+transaction Bootstrap extends SubrogationTransaction {
+}
+
+/**
+ * This transaction will be executed by the admin to assign a primary
+ * to a Claim. The primary agent must be from the same companay
+ * as the specified Claim's policy. Otherwise, an error is thrown. The status
+ * of the Claim is set to UNDER_REVIEW.
+ */
+transaction AssignPrimaryAgent extends SubrogationTransaction {
+    --> Agent primaryAgent
+    --> Claim claim
+}
+
+/**
+ * This transaction will be executed by the primary agent to update
+ * the RecoveryType of the Claim.
+ */
+transaction UpdateRecoveryType extends SubrogationTransaction {
+    o RecoveryType recoveryType
+    --> Claim claim
+}
+
+/**
+ * This transaction will be executed by the primary agent to assess
+ * the recovery cost and update the assessedTotalCost and
+ * assessedCoverage fields of the Claim.
+ */
+transaction AssessRecoveryCost extends SubrogationTransaction {
+    o Double totalCost
+    o Double coverage
+    --> Claim claim
+}
+
+/**
+ * This transaction will be executed by the primary agent to
+ * assign a counter-party's agent to the Claim. The status
+ * of the Claim will be set to UNDER_COUNTER_PARTY_REVIEW.
+ */
+transaction AssignCounterParty extends SubrogationTransaction {
+    --> Claim claim
+    --> Agent counterPartyAgent
+}
+
+/**
+ * This transaction will be executed by the agents to update
+ * the status of the specified Claim. If the specified status
+ * is INIT, ADJUST, UNDER_COUNTER_PARTY_REVIEW, or ADJUSTED,
+ * then an error is thrown.
+ */
+transaction UpdateClaimStatus extends SubrogationTransaction {
+    o ClaimStatus status
+    --> Claim claim
+}
+
+/**
+ * This transaction will be executed by the counter-party's
+ * agent to assign an Adjustor to the Claim. The status of
+ * the Claim will be set to ADJUST.
+ */
+transaction AssignAdjustor extends SubrogationTransaction {
+    --> Claim claim
+    --> Adjustor adjustor
+}
+
+/**
+ * This transaction will be executed by the Adjustor to update
+ * adjustedTotalCost and adjustedCoverage fields and
+ * changes the status to ADJUSTED.
+ */
+transaction AdjustRecoveryCost extends SubrogationTransaction {
+    o Double totalCost
+    o Double coverage
+    --> Claim claim
+}
+
+/**
+ * This transaction will be executed by the counter-party agent
+ * when the Adjustor has flipped the status to ADJUSTED. The
+ * counter-party's agent will finalize the recovery cost which
+ * will result in the totalCost and coverage fields to be set
+ * using the adjustedTotalCost and adjustedCoverage fields,
+ * respectively. Claim's status field also gets set to ACCEPTED.
+ */
+transaction AcceptAdjustedRecoveryCost extends SubrogationTransaction {
+    --> Claim claim
+}
+
+event StatusUpdateEvent {
+    o SubrogationTransaction txnReference
+    o ClaimStatus oldStatus
+    o ClaimStatus newStatus
+}
