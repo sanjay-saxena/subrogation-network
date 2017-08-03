@@ -51,15 +51,6 @@ function onBootstrap(txn) {
 
     var factory = getFactory();
 
-    // Admin
-    var bossman = factory.newResource(ROOT_NAMESPACE,
-                                      'Admin',
-                                      'bobby.da.boss@example.com');
-    bossman.firstName = "Bobby";
-    bossman.lastName = "Da Boss";
-    bossman.password = "u talkin' to me?";
-    admins.push(bossman);
-
     // Insurance Agents
     var mr_incredible = factory.newResource(ROOT_NAMESPACE,
                                             'Agent',
@@ -70,6 +61,18 @@ function onBootstrap(txn) {
     mr_incredible.title = "Principal Insurance Agent";
     mr_incredible.company = 'ACME_CORP';
     agents.push(mr_incredible);
+
+    ....
+
+    // Policy Holders
+    var batman = factory.newResource(ROOT_NAMESPACE,
+                                     'PolicyHolder',
+                                     'batman@example.com');
+    batman.firstName = "Bruce";
+    batman.lastName = "Wayne";
+    batman.password = "holy blockchain, robin!"
+    batman.policies = [];
+    policyHolders.push(batman);
 
     ....
 
