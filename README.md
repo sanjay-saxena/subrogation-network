@@ -20,6 +20,7 @@ $ cd ~/Workdir/subrogation-network
 $ npm install
 $ ./fabric-tools/downloadHyperledger.sh
 $ ./fabric-tools/startFabric.sh
+$ ./fabric-tools/createComposerProfile.sh
 $ ./scripts/importAdminIdentity.sh
 ```
 
