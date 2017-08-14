@@ -16,8 +16,8 @@ namespace org.example.subrogation
 
 enum Company {
     o ACME_CORP
-    o GEIKO_CORP
-    o AFLACK_CORP
+    o GEICO_CORP
+    o AFLAC_CORP
     o NATIONWIDE_CORP
     o WAYNE_ENTERPRISES
 }
@@ -82,10 +82,6 @@ abstract participant User identified by email {
   o String password
 }
 
-/*
-** An instance of Admin will have to ability to make sure that
-** the entire Business Network is operational.
-*/
 participant Admin extends User {
 }
 
