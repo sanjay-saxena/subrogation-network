@@ -1,2 +1,2 @@
 set -x
-composer transaction submit  -n subrogation-network -p hlfv1 -i PeerAdmin -s adminpw -d "{\"\$class\": \"org.example.subrogation.Bootstrap\"}"
+composer transaction submit --card admin@subrogation-network --data "{\"\$class\": \"org.example.subrogation.Bootstrap\"}"

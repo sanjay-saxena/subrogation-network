@@ -1,17 +1,24 @@
 # subrogation-network
 
-In order to create an Insurance Subrogation app that is backed by Blockchain, you need to install the following:
+In order to create an Todo List app that is backed by Blockchain on Mac OSX, you
+need to install certain
+[prerequisites](https://hyperledger.github.io/composer/installing/prereqs-mac.html)
+for Hyperledger Composer.
 
+On any system, before proceeding any further, make sure that you have the following
+dependencies installed:
+
+ * OSX Only -- Install Xcode
  * [Docker](https://www.docker.com/) version 17.03 or later
  * [Docker-compose](https://docs.docker.com/compose/) version 1.11.2 or later
- * [Node.js](https://nodejs.org/en/) version 6.10.X
- * [npm](https://www.npmjs.com/) version 4.4.4 or later
- * [Hyperledger Fabric](https://hyperledger-fabric.readthedocs.io/en/latest/) version 1.0
- * [Hyperledger Composer](https://hyperledger.github.io/composer/introduction/introduction.html) version 0.10.1 or later
- * [Yeoman](http://yeoman.io/) Generator version 1.8.5 or later
+ * [Node.js](https://nodejs.org/en/) version 8.9 or higher
+ * [npm](https://www.npmjs.com/) v5.x
+ * [Python](https://www.python.org/download/releases/2.7/) 2.7.x
+ * [Hyperledger Composer](https://hyperledger.github.io/composer/introduction/introduction.html) version 0.16.0 or later
+ * [Yeoman](http://yeoman.io/) Generator version 2.0 or later
 
 
-Once you have Docker and Docker-compose installed, you can download and and start Hyperledger Fabric v1.0 as shown below:
+Once you have Docker and Docker-compose installed, you can download and and start Hyperledger Fabric v1.0.4 as shown below:
 
 ```
 $ cd ~/Workdir
@@ -20,8 +27,7 @@ $ cd ~/Workdir/subrogation-network
 $ npm install
 $ ./fabric-tools/downloadHyperledger.sh
 $ ./fabric-tools/startFabric.sh
-$ ./fabric-tools/createComposerProfile.sh
-$ ./scripts/importAdminIdentity.sh
+$ ./fabric-tools/createPeerAdminCard.sh
 ```
 
 Hyperledger Composer provides higher-level abstractions to hide the complexity of the blockchain technologies that are implemented as part of Hyperledger Fabric. A Blockchain app that is built by Hyperledger Composer relies on a `Business Network` as an abstraction that helps orchestrate the transfer of assets. A `Business Network` comprises of `Business Model`, `Business Logic`, and `Access Control Lists`.
@@ -106,15 +112,17 @@ $ cd ~/Workdir/subrogation-network
 $ ./scripts/createArchive.sh
 ```
 
-This will result in the creation of `subrogation-network.bna`.
+This will result in the creation of `subrogation-network@1.0.0.bna`.
 
 ## Deploy Business Network Archive
 
-Assuming that Hyperleder Fabric is running, here is the step to deploy `subrogation-network.bna` to it:
+Assuming that Hyperleder Fabric is running, here is the step to deploy `subrogation-network@1.0.0.bna` to it:
 
 ```
 $ cd ~/Workdir/subrogation-network
-$ ./scripts/deploy.sh
+$ ./scripts/installPeerAdminCard.sh
+$ ./scripts/startNetwork.sh
+$ ./scripts/importNetworkAdminCard.sh
 ```
 
 ## Submit Bootstrap Transaction
@@ -134,6 +142,7 @@ First, install the generator as shown below:
 
 ```
 $ npm install -g generator-hyperledger-composer
+$ npm install -g yo
 ```
 
 Here is the step to generate the Angular2 app for Subrogation using Yeoman:
@@ -145,17 +154,17 @@ $ yo hyperledger-composer:angular
 Welcome to the Hyperledger Composer Angular2 skeleton app generator
 ? Do you want to connect to a running Business Network? Yes
 ? What is the name of the application you wish to generate?: angular-app
-? Description of the application: Skeleton Hyperledger Composer Angular2 project
+? Description of the application: Skeleton Hyperledger Composer Angular project
 ? Author name: xxxx xxxxx
 ? Author email: foo@example.com
-? What is the Business Network Identifier?: subrogation-network
-? What is the Connection Profile to use? hlfv1
-? Enrollment id: admin
-? Enrollment Secret: adminpw
-Configuring: angular-app
-About to start creating files
-About to connect to a running business network
-Connected to: subrogation-network
+? License: Apache-2.0
+? Name of the Business Network card: admin@subrogation-network
+? Do you want to generate a new REST API or connect to an existing REST API?  Generate a new REST API
+? REST server port: 3000
+? Should namespaces be used in the generated REST API? Never use namespaces
+
+Created application!
+Completed generation process
 
 ....
 ```

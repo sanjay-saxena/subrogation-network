@@ -1,2 +1,2 @@
 set -x
-composer network list -n subrogation-network -p hlfv1 -i PeerAdmin -s adminpw
+composer network list --card admin@subrogation-network

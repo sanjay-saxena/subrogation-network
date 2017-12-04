@@ -1,4 +1,6 @@
 logs
 node_modules
 angular-app
-todolist-network-hlfv1.bna
+composer-logs
+*.bna
+*.card
